@@ -58,9 +58,10 @@ CurrentUser = Annotated[User, Depends(get_current_user)]
 
 
 def get_current_active_admin(current_user: CurrentUser) -> User:
-    if not current_user.is_active:
+    if not current_user.is_admin:
         raise HTTPException(
-            status_code=403, detail="The user doesn't have enough privileges"
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="The user doesn't have enough privileges",
         )
 
     return current_user
