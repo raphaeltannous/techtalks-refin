@@ -1,3 +1,4 @@
+import pathlib
 import secrets
 import warnings
 from typing import Literal
@@ -13,8 +14,11 @@ from typing_extensions import Self
 
 
 class Settings(BaseSettings):
+    configPath: pathlib.Path = pathlib.Path(__file__)
+    rootProject: pathlib.Path = pathlib.Path(configPath.parent).parent
+
     model_config = SettingsConfigDict(
-        env_file="../.env",
+        env_file=str(rootProject.joinpath(".env")),
         env_ignore_empty=True,
         extra="ignore",
     )
