@@ -17,8 +17,14 @@ class Settings(BaseSettings):
     configPath: pathlib.Path = pathlib.Path(__file__)
     rootProject: pathlib.Path = pathlib.Path(configPath.parent).parent
 
+    envFile: pathlib.Path = rootProject.joinpath(".env")
+    if not envFile.is_file():
+        raise FileNotFoundError(
+            "envFile (.env) does not exists at the root of the project."
+        )
+
     model_config = SettingsConfigDict(
-        env_file=str(rootProject.joinpath(".env")),
+        env_file=str(envFile),
         env_ignore_empty=True,
         extra="ignore",
     )
