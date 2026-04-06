@@ -13,7 +13,7 @@ services:
     restart: unless-stopped
   mailpit:
     image: axllent/mailpit
-    container_name: mailpit
+    container_name: "RefInMailpit"
     restart: unless-stopped
     volumes:
       - "./.development/mailpit/data:/data"
