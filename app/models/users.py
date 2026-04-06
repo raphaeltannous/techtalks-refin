@@ -1,0 +1,78 @@
+import uuid
+from datetime import datetime, timezone
+
+from pydantic import EmailStr
+from sqlalchemy import DateTime
+from sqlmodel import Field, SQLModel
+
+
+class UserBase(SQLModel):
+    username: str = Field(unique=True, index=True, nullable=False, max_length=50)
+    email: EmailStr = Field(unique=True, index=True, nullable=False, max_length=255)
+    name: str | None = Field(default=None, index=True, max_length=75)
+    is_active: bool = True
+    is_admin: bool = False
+
+
+class User(UserBase, table=True):
+    id: uuid.UUID | None = Field(default_factory=uuid.uuid4, primary_key=True)
+    hashed_password: str
+    created_at: datetime | None = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        sa_type=DateTime(timezone=True),  # type: ignore
+    )
+    updated_at: datetime | None = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        sa_type=DateTime(timezone=True),  # type: ignore
+        sa_column_kwargs={
+            "onupdate": lambda: datetime.now(timezone.utc),
+        },
+    )
+
+
+class UserCreate(UserBase):
+    password: str = Field(min_length=8, max_length=128)
+
+
+class UserRegister(SQLModel):
+    username: str = Field(max_length=50)
+    email: EmailStr = Field(max_length=255)
+    password: str = Field(min_length=8, max_length=128)
+    name: str | None = Field(default=None, max_length=75)
+
+
+class UserUpdate(UserBase):
+    """
+    Admin-only user update model.
+
+    Making username and email optional from UserBase.
+    """
+
+    username: str | None = Field(default=None, max_length=50)  # type: ignore[assignment]
+    email: EmailStr | None = Field(default=None, max_length=255)  # type: ignore[assignment]
+    password: str | None = Field(default=None, min_length=8, max_length=128)
+
+
+class UserUpdateMe(SQLModel):  # Public
+    email: EmailStr | None = Field(default=None, max_length=255)
+    name: str | None = Field(default=None, max_length=75)
+
+
+class UpdatePassword(SQLModel):
+    current_password: str = Field(min_length=8, max_length=128)
+    new_password: str = Field(min_length=8, max_length=128)
+
+
+class UserPublic(UserBase):
+    """
+    UserPublic returned to the public as json.
+    """
+
+    id: uuid.UUID
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+
+
+class UsersPublic(SQLModel):
+    users: list[UserPublic]
+    count: int
