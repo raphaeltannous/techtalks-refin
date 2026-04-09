@@ -11,6 +11,7 @@ from app.config import settings
 # by alembic.
 from app.models.user import User  # noqa: F401
 from app.models.user_certificate import UserCertificate  # noqa: F401
+from app.models.user_language import UserLanguage  # noqa: F401
 from app.models.user_link import UserLink  # noqa: F401
 from app.models.user_profile import UserProfile  # noqa: F401
 from app.models.user_project import UserProject  # noqa: F401
