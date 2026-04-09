@@ -10,10 +10,11 @@ from app.config import settings
 # Make sure to import all the table models
 # from app.models so that they are detect
 # by alembic.
-from app.models.user import User
-from app.models.user_link import UserLink
-from app.models.user_profile import UserProfile
-from app.models.user_project import UserProject
+from app.models.user import User  # noqa: F401
+from app.models.user_certificate import UserCertificate  # noqa: F401
+from app.models.user_link import UserLink  # noqa: F401
+from app.models.user_profile import UserProfile  # noqa: F401
+from app.models.user_project import UserProject  # noqa: F401
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
