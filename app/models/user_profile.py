@@ -36,8 +36,8 @@ class UserProfile(UserProfileBase, table=True):
     )
     user_id: uuid.UUID = Field(
         index=True,
+        unique=True,
         nullable=False,
-        primary_key=True,
         foreign_key="user.id",
         ondelete="CASCADE",
     )
