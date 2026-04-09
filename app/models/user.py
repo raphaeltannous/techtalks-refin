@@ -7,7 +7,7 @@ from sqlalchemy import DateTime
 from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
-    from models.user_profile import UserProfile
+    from user_profile import UserProfile
 
 
 class UserBase(SQLModel):
