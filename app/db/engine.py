@@ -1,9 +1,9 @@
 from config import settings
 from models import (
-    user,
-    user_link,
-    user_profile,
-    user_project,
+    user,  # noqa: F401
+    user_link,  # noqa: F401
+    user_profile,  # noqa: F401
+    user_project,  # noqa: F401
 )
 from sqlmodel import create_engine
 
