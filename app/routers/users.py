@@ -5,7 +5,7 @@ import crud.users
 import security.password_hashing
 from fastapi import APIRouter, Depends, HTTPException, status
 from models.message import Message
-from models.users import (
+from models.user import (
     UpdatePassword,
     User,
     UserCreate,

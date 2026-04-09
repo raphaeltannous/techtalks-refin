@@ -1,7 +1,7 @@
 from typing import Any
 
 import security.password_hashing
-from models.users import User, UserCreate, UserUpdate
+from models.user import User, UserCreate, UserUpdate
 from security.password_hashing import get_password_hash
 from sqlmodel import Session, select
 

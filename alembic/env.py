@@ -1,4 +1,3 @@
-import os
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config, pool
@@ -6,7 +5,17 @@ from sqlmodel import SQLModel
 
 from alembic import context
 from app.config import settings
-from app.models.users import User
+
+# Make sure to import all the table models
+# from app.models so that they are detect
+# by alembic.
+from app.models.user import User  # noqa: F401
+from app.models.user_certificate import UserCertificate  # noqa: F401
+from app.models.user_experience import UserExperience  # noqa: F401
+from app.models.user_language import UserLanguage  # noqa: F401
+from app.models.user_link import UserLink  # noqa: F401
+from app.models.user_profile import UserProfile  # noqa: F401
+from app.models.user_project import UserProject  # noqa: F401
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

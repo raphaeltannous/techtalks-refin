@@ -1,13 +1,16 @@
 import uuid
 from datetime import datetime, timezone
+from typing import TYPE_CHECKING
 
 from pydantic import EmailStr
 from sqlalchemy import DateTime
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, Relationship, SQLModel
+
+if TYPE_CHECKING:
+    from user_profile import UserProfile
 
 
 class UserBase(SQLModel):
-    username: str = Field(unique=True, index=True, nullable=False, max_length=50)
     email: EmailStr = Field(unique=True, index=True, nullable=False, max_length=255)
     name: str | None = Field(default=None, index=True, max_length=75)
     is_active: bool = True
@@ -15,7 +18,12 @@ class UserBase(SQLModel):
 
 
 class User(UserBase, table=True):
-    id: uuid.UUID | None = Field(default_factory=uuid.uuid4, primary_key=True)
+    id: uuid.UUID = Field(
+        default_factory=uuid.uuid4,
+        index=True,
+        primary_key=True,
+    )
+
     hashed_password: str
     created_at: datetime | None = Field(
         default_factory=lambda: datetime.now(timezone.utc),
@@ -29,13 +37,16 @@ class User(UserBase, table=True):
         },
     )
 
+    user_profile: UserProfile = Relationship(
+        back_populates="user",
+    )
+
 
 class UserCreate(UserBase):
     password: str = Field(min_length=8, max_length=128)
 
 
 class UserRegister(SQLModel):
-    username: str = Field(max_length=50)
     email: EmailStr = Field(max_length=255)
     password: str = Field(min_length=8, max_length=128)
     name: str | None = Field(default=None, max_length=75)
@@ -45,10 +56,9 @@ class UserUpdate(UserBase):
     """
     Admin-only user update model.
 
-    Making username and email optional from UserBase.
+    Making email optional from UserBase.
     """
 
-    username: str | None = Field(default=None, max_length=50)  # type: ignore[assignment]
     email: EmailStr | None = Field(default=None, max_length=255)  # type: ignore[assignment]
     password: str | None = Field(default=None, min_length=8, max_length=128)
 

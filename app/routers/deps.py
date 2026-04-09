@@ -9,7 +9,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 from models.jwt import TokenPayload
-from models.users import User
+from models.user import User
 from pydantic import ValidationError
 from sqlmodel import Session
 

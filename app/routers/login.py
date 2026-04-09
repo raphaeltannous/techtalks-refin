@@ -7,7 +7,7 @@ from config import settings
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from models.jwt import Token
-from models.users import (
+from models.user import (
     UserPublic,
 )
 
