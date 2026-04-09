@@ -14,6 +14,8 @@ if TYPE_CHECKING:
     from user_language import UserLanguage
     from user_link import UserLink
     from user_project import UserProject
+    from user_skill import UserSkill
+    from user_education import UserEducation
 
 
 class UserProfileBase(SQLModel):
@@ -70,5 +72,11 @@ class UserProfile(UserProfileBase, table=True):
         back_populates="user_profile",
     )
     user_experiences: list["UserExperience"] = Relationship(
+        back_populates="user_profile",
+    )
+    user_skills: list["UserSkill"] = Relationship(
+        back_populates="user_profile",
+    )
+    user_educations: list["UserEducation"] = Relationship(
         back_populates="user_profile",
     )

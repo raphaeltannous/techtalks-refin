@@ -7,6 +7,8 @@ from models import (
     user_link,  # noqa: F401
     user_profile,  # noqa: F401
     user_project,  # noqa: F401
+    user_education, #noqa: F401
+    user_skill,  #noqa: F401
 )
 from sqlmodel import create_engine
 

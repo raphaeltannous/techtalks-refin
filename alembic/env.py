@@ -16,7 +16,8 @@ from app.models.user_language import UserLanguage  # noqa: F401
 from app.models.user_link import UserLink  # noqa: F401
 from app.models.user_profile import UserProfile  # noqa: F401
 from app.models.user_project import UserProject  # noqa: F401
-
+from app.models.user_education import UserEducation  # noqa: F401
+from app.models.user_skill import UserSkill  # noqa: F401
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
