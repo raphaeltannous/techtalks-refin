@@ -5,8 +5,7 @@ from typing import TYPE_CHECKING
 from pydantic.alias_generators import to_snake
 from sqlalchemy import DateTime
 from sqlalchemy.orm import declared_attr
-from sqlmodel import Field, Relationship
-from sqlmodel.main import SQLModel
+from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
     from user_profile import UserProfile
