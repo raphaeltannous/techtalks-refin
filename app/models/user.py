@@ -11,7 +11,6 @@ if TYPE_CHECKING:
 
 
 class UserBase(SQLModel):
-    username: str = Field(unique=True, index=True, nullable=False, max_length=50)
     email: EmailStr = Field(unique=True, index=True, nullable=False, max_length=255)
     name: str | None = Field(default=None, index=True, max_length=75)
     is_active: bool = True
@@ -43,7 +42,6 @@ class UserCreate(UserBase):
 
 
 class UserRegister(SQLModel):
-    username: str = Field(max_length=50)
     email: EmailStr = Field(max_length=255)
     password: str = Field(min_length=8, max_length=128)
     name: str | None = Field(default=None, max_length=75)
@@ -53,10 +51,9 @@ class UserUpdate(UserBase):
     """
     Admin-only user update model.
 
-    Making username and email optional from UserBase.
+    Making email optional from UserBase.
     """
 
-    username: str | None = Field(default=None, max_length=50)  # type: ignore[assignment]
     email: EmailStr | None = Field(default=None, max_length=255)  # type: ignore[assignment]
     password: str | None = Field(default=None, min_length=8, max_length=128)
 

@@ -56,7 +56,6 @@ class Settings(BaseSettings):
         )
 
     FIRST_ADMIN_EMAIL: EmailStr = "test@example.com"
-    FIRST_ADMIN_USERNAME: str = "admin"
     FIRST_ADMIN_PASSWORD: str
 
     def _check_default_secret(self, var_name: str, value: str | None) -> None:
