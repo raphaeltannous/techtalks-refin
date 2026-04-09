@@ -1,0 +1,54 @@
+import uuid
+from datetime import datetime, timezone
+from typing import TYPE_CHECKING
+
+from pydantic.alias_generators import to_snake
+from sqlalchemy import DateTime
+from sqlalchemy.orm import declared_attr
+from sqlmodel import Field, Relationship, SQLModel
+
+if TYPE_CHECKING:
+    from models.users import User
+
+
+class UserProfileBase(SQLModel):
+    headline: str | None = Field(max_length=100)
+    about: str | None = Field(max_length=1_000)
+    location: str | None = Field(max_length=200)
+
+
+class UserProfile(UserProfileBase, table=True):
+    @declared_attr.directive  # type: ignore[misc]
+    @classmethod
+    def __tablename__(cls) -> str:  # pyright: ignore[reportIncompatibleVariableOverride]
+        return to_snake(cls.__name__)
+
+    id: uuid.UUID = Field(
+        default_factory=uuid.uuid4,
+        unique=True,
+        index=True,
+        primary_key=True,
+    )
+    user_id: uuid.UUID = Field(
+        index=True,
+        nullable=False,
+        primary_key=True,
+        foreign_key="user.id",
+        ondelete="CASCADE",
+    )
+
+    created_at: datetime | None = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        sa_type=DateTime(timezone=True),  #  type: ignore
+    )
+    updated_at: datetime | None = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        sa_type=DateTime(timezone=True),  #  type: ignore
+        sa_column_kwargs={
+            "onupdate": lambda: datetime.now(timezone.utc),
+        },
+    )
+
+    user: User = Relationship(
+        back_populates="user_profile",
+    )

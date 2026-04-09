@@ -1,9 +1,13 @@
 import uuid
 from datetime import datetime, timezone
+from typing import TYPE_CHECKING
 
 from pydantic import EmailStr
 from sqlalchemy import DateTime
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, Relationship, SQLModel
+
+if TYPE_CHECKING:
+    from models.user_profile import UserProfile
 
 
 class UserBase(SQLModel):
@@ -27,6 +31,10 @@ class User(UserBase, table=True):
         sa_column_kwargs={
             "onupdate": lambda: datetime.now(timezone.utc),
         },
+    )
+
+    user_profile: UserProfile = Relationship(
+        back_populates="user",
     )
 
 
