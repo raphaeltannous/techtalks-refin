@@ -25,11 +25,11 @@ class UserProjectBase(SQLModel):
     )
 
     start_date: datetime | None = Field(
-        Default=None,
+        default=None,
         sa_type=DateTime(timezone=True),  # type: ignore
     )
     end_date: datetime | None = Field(
-        Default=None,
+        default=None,
         sa_type=DateTime(timezone=True),  # type: ignore
     )
 
