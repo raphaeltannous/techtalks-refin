@@ -10,6 +10,7 @@ from sqlmodel import Field, Relationship, SQLModel
 if TYPE_CHECKING:
     from user import User
     from user_certificate import UserCertificate
+    from user_experience import UserExperience
     from user_language import UserLanguage
     from user_link import UserLink
     from user_project import UserProject
@@ -66,5 +67,8 @@ class UserProfile(UserProfileBase, table=True):
         back_populates="user_profile",
     )
     user_languages: list[UserLanguage] = Relationship(
+        back_populates="user_profile",
+    )
+    user_experiences: list[UserExperience] = Relationship(
         back_populates="user_profile",
     )
