@@ -12,11 +12,11 @@ if TYPE_CHECKING:
 
 
 class UserEducationBase(SQLModel):
-    school: str
-    degree: str
-    major: str
-    start_date: datetime
-    end_date: datetime
+    school: str = Field(max_length=100)
+    degree: str = Field(max_length=100)
+    major: str = Field(max_length=100)
+    start_date: datetime = Field(sa_type=DateTime(timezone=True))  # type: ignore
+    end_date: datetime = Field(sa_type=DateTime(timezone=True))  # type: ignore
     grade: int
     description: str | None = Field(default=None, max_length=1000)
 
