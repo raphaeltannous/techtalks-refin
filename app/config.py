@@ -29,6 +29,7 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
+    # TODO: Update to API_VERSION_1_STRING
     API_VERSION_STRING: str = "/api/v1"
 
     SECRET_KEY: str = secrets.token_urlsafe(nbytes=32)
