@@ -33,6 +33,11 @@ class Settings(BaseSettings):
     API_VERSION_STRING: str = "/api/v1"
 
     SECRET_KEY: str = secrets.token_urlsafe(nbytes=32)
+
+    # Dummy hash to use for timing attack prevention when user is not found
+    # This is an Argon2 hash of a random password, used to ensure constant-time comparison
+    DUMMY_PASSWORD_HASH: str = "$argon2id$v=19$m=65536,t=3,p=4$MjQyZWE1MzBjYjJlZTI0Yw$YTU4NGM5ZTZmYjE2NzZlZjY0ZWY3ZGRkY2U2OWFjNjk"
+
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
     ENVIRONMENT: Literal["local", "staging", "production"] = "local"
 
