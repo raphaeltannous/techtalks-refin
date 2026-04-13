@@ -1,6 +1,11 @@
 import uuid
+from datetime import timedelta
 
-from models.user import User, UserPublic, UsersPublic
+import security.jwt_token
+import security.password_hashing
+from config import settings
+from models.jwt import Token
+from models.user import User, UserPublic, UsersPublic, UserUpdate
 from pydantic import EmailStr
 from repositories.user import UserRepository
 
@@ -30,4 +35,54 @@ class UserService:
         return self.user_repository.get_by_id(id)
 
     def get_by_email(self, email: EmailStr) -> User | None:
-        pass
+        return self.user_repository.get_by_email(email)
+
+    def authenticate(self, *, email: EmailStr, password: str) -> Token | None:
+        user = self.get_by_email(email)
+
+        # Timing attach prevention
+        if not user:
+            security.password_hashing.verify_password(
+                password,
+                settings.DUMMY_PASSWORD_HASH,
+            )
+
+            return None
+
+        verified, updated_password_hash = security.password_hashing.verify_password(
+            password,
+            user.hashed_password,
+        )
+
+        if not verified:
+            return None
+
+        # TODO: Send it back to the handler to catch it.
+        # How should I send it to the handler?
+        # Using errors or is there another way?
+        if not user.is_active:
+            return None
+
+        if updated_password_hash:
+            user_in = UserUpdate(password=updated_password_hash)
+            user_in.model_dump(
+                exclude_unset=True,
+                exclude_defaults=True,
+                exclude_none=True,
+            )
+
+            self.user_repository.update_user(
+                user,
+                user_in,
+            )
+
+        access_token_expires = timedelta(
+            minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES,
+        )
+
+        return Token(
+            access_token=security.jwt_token.create_access_token(
+                user.id,
+                expires_delta=access_token_expires,
+            )
+        )
