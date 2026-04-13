@@ -13,7 +13,7 @@ from pydantic import ValidationError
 from services.user import UserService
 
 reusable_oauth2 = OAuth2PasswordBearer(
-    tokenUrl=f"{settings.API_VERSION_STRING}/login/access-token"
+    tokenUrl=f"{settings.API_VERSION_STRING}/auth/login"
 )
 
 
