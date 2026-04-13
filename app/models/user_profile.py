@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from user_skill import UserSkill
     from user_education import UserEducation
 
-   
+
 class UserProfileBase(SQLModel):
     headline: str | None = Field(default=None, max_length=100)
     about: str | None = Field(default=None, max_length=1_000)
