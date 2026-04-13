@@ -1,7 +1,7 @@
 import uuid
 from typing import Sequence
 
-from models.user import User
+from models.user import User, UserUpdate
 from pydantic import EmailStr
 from repositories.user import UserRepository
 from sqlmodel import Session, col, func, select
@@ -40,3 +40,12 @@ class PostgresUserRepository(UserRepository):
             user = session.exec(statement).first()
 
             return user
+
+    def update_user(self, user_db: User, user_in: UserUpdate) -> User | None:
+        with Session(self.engine) as session:
+            user_db.sqlmodel_update(user_in)
+            session.add(user_db)
+            session.commit()
+            session.refresh(user_db)
+
+            return user_db

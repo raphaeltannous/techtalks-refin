@@ -2,7 +2,7 @@ import uuid
 from abc import ABCMeta, abstractmethod
 from typing import Sequence
 
-from models.user import User
+from models.user import User, UserUpdate
 from pydantic import EmailStr
 
 
@@ -19,4 +19,8 @@ class UserRepository:
 
     @abstractmethod
     def get_by_email(self, user_email: EmailStr) -> User | None:
+        pass
+
+    @abstractmethod
+    def update_user(self, user_db: User, user_in: UserUpdate) -> User | None:
         pass
