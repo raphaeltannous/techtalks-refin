@@ -5,7 +5,7 @@ import security.jwt_token
 import security.password_hashing
 from config import settings
 from models.jwt import Token
-from models.user import User, UserPublic, UsersPublic, UserUpdate
+from models.user import User, UserPublic, UserRegister, UsersPublic, UserUpdate
 from pydantic import EmailStr
 from repositories.user import UserRepository
 
@@ -37,7 +37,12 @@ class UserService:
     def get_by_email(self, email: EmailStr) -> User | None:
         return self.user_repository.get_by_email(email)
 
-    def authenticate(self, *, email: EmailStr, password: str) -> Token | None:
+    def authenticate(
+        self,
+        *,
+        email: EmailStr,
+        password: str,
+    ) -> Token | None:
         user = self.get_by_email(email)
 
         # Timing attach prevention
@@ -86,3 +91,28 @@ class UserService:
                 expires_delta=access_token_expires,
             )
         )
+
+    def register(
+        self,
+        *,
+        user_in: UserRegister,
+    ) -> UserPublic | None:
+        user_db = self.get_by_email(user_in.email)
+        if user_db:
+            return None  # TODO: Raise error
+
+        user = User.model_validate(
+            user_in,
+            update={
+                "hashed_password": security.password_hashing.get_password_hash(
+                    user_in.password,
+                ),
+            },
+        )
+
+        user = self.user_repository.add_user(
+            user,
+        )
+        # TODO: You might want to send an welcome email or verify.
+
+        return UserPublic.model_validate(user)
