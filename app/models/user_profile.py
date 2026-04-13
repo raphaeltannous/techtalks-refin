@@ -22,6 +22,8 @@ class UserProfileBase(SQLModel):
     headline: str | None = Field(default=None, max_length=100)
     about: str | None = Field(default=None, max_length=1_000)
     location: str | None = Field(default=None, max_length=200)
+    profile_picture: str | None = Field(default=None)
+    banner: str | None = Field(default=None)
 
 
 class UserProfile(UserProfileBase, table=True):
