@@ -1,8 +1,9 @@
-from typing import Annotated
+from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from models.jwt import Token
+from models.user import UserPublic, UserRegister
 from services.user import UserService
 
 from routers.deps import get_user_service
@@ -30,3 +31,25 @@ def login(
         )
 
     return token
+
+
+@router.post("/register")
+def register(
+    *,
+    user_repository: Annotated[UserService, Depends(get_user_service)],
+    user_in: UserRegister,
+    response_model=UserPublic,
+) -> Any:
+    """
+    Register.
+    """
+    user = user_repository.register(
+        user_in=user_in,
+    )
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="The user with this email already exists in the system.",
+        )
+
+    return user
