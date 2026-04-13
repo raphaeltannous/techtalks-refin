@@ -41,6 +41,14 @@ class PostgresUserRepository(UserRepository):
 
             return user
 
+    def add_user(self, user_in: User) -> User:
+        with Session(self.engine) as session:
+            session.add(user_in)
+            session.commit()
+            session.refresh(user_in)
+
+            return user_in
+
     def update_user(self, user_db: User, user_in: UserUpdate) -> User | None:
         with Session(self.engine) as session:
             user_db.sqlmodel_update(user_in)
