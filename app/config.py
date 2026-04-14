@@ -64,6 +64,13 @@ class Settings(BaseSettings):
     FIRST_ADMIN_EMAIL: EmailStr = "test@example.com"
     FIRST_ADMIN_PASSWORD: str
 
+    # SMTP Configuration for email sending
+    SMTP_SERVER: str = "localhost"
+    SMTP_PORT: int = 1025
+    SMTP_USER: str = ""
+    SMTP_PASSWORD: str = ""
+    SMTP_FROM_EMAIL: EmailStr
+
     def _check_default_secret(self, var_name: str, value: str | None) -> None:
         if value == "changethis":
             message = (
