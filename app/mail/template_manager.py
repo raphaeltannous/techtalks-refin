@@ -53,7 +53,7 @@ class EmailTemplateManager:
     ) -> EmailData:
         return self.__render_template(
             template_name="email_verification.html",
-            recipient=User.email,
+            recipient=user.email,
             subject="Email Verification",
             name=user.name,
             verification_link=verification_link,
