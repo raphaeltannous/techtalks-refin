@@ -1,9 +1,13 @@
 import uuid
 from datetime import timedelta
 
+from fastapi import BackgroundTasks
+
 import security.jwt_token
 import security.password_hashing
 from config import settings
+from mail.mailer import Mailer
+from mail.template_manager import EmailTemplateManager
 from models.jwt import Token
 from models.user import User, UserPublic, UserRegister, UsersPublic, UserUpdate
 from pydantic import EmailStr
@@ -14,8 +18,12 @@ class UserService:
     def __init__(
         self,
         user_repository: UserRepository,
+        mail_template_manager: EmailTemplateManager,
+        mailer: Mailer,
     ) -> None:
         self.user_repository = user_repository
+        self.mail_template_manager = mail_template_manager
+        self.mailer = mailer
 
     def get_public_users(self, offset: int, limit: int) -> UsersPublic:
         users, count = self.user_repository.get_users(offset, limit)
@@ -93,6 +101,7 @@ class UserService:
         self,
         *,
         user_in: UserRegister,
+        background_tasks: BackgroundTasks,
     ) -> UserPublic | None:
         user_db = self.get_by_email(user_in.email)
         if user_db:
@@ -110,6 +119,12 @@ class UserService:
         user = self.user_repository.add_user(
             user,
         )
-        # TODO: You might want to send an welcome email or verify.
+
+        background_tasks.add_task(
+            self.mailer.send_html_email,
+            self.mail_template_manager.welcome_email(
+                user=user,
+            )
+        )
 
         return UserPublic.model_validate(user)

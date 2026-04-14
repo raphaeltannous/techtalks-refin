@@ -1,6 +1,6 @@
 from typing import Annotated, Any
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from models.jwt import Token
 from models.user import UserPublic, UserRegister
@@ -57,12 +57,14 @@ def register(
     *,
     user_repository: Annotated[UserService, Depends(get_user_service)],
     user_in: UserRegister,
+    background_tasks: BackgroundTasks,
 ) -> Any:
     """
     Register.
     """
     user = user_repository.register(
         user_in=user_in,
+        background_tasks=background_tasks,
     )
     if not user:
         raise HTTPException(

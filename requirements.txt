@@ -2,8 +2,8 @@ fastapi[standard]
 sqlmodel
 alembic
 pwdlib
-pwdlib[argon2]
-pwdlib[bcrypt]
+pwdlib[argon2,bcrypt]
 tenacity
 pyjwt
 psycopg2
+jinja2
