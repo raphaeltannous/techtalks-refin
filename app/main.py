@@ -39,8 +39,7 @@ async def lifespan(app: FastAPI):
     config_path: pathlib.Path = pathlib.Path(__file__)
     root_project: pathlib.Path = pathlib.Path(config_path.parent).parent
     log_directory = root_project.joinpath("logs")
-    if not log_directory.is_dir():
-        log_directory.mkdir()
+    log_directory.mkdir(parents=True, exist_ok=True)
     log_file = log_directory.joinpath("app.log")
 
     file_handler = logging.FileHandler(
