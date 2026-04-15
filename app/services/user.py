@@ -1,11 +1,11 @@
 import uuid
 from datetime import timedelta
 
-from fastapi import BackgroundTasks
-
 import security.jwt_token
 import security.password_hashing
 from config import settings
+from exceptions import DuplicateUserError, InactiveUserError, IncorrectCredentialsError
+from fastapi import BackgroundTasks
 from mail.mailer import Mailer
 from mail.template_manager import EmailTemplateManager
 from models.jwt import Token
@@ -50,7 +50,7 @@ class UserService:
         *,
         email: EmailStr,
         password: str,
-    ) -> Token | None:
+    ) -> Token:
         user = self.get_by_email(email)
 
         # Timing attack prevention
@@ -60,7 +60,7 @@ class UserService:
                 settings.DUMMY_PASSWORD_HASH,
             )
 
-            return None
+            raise IncorrectCredentialsError()
 
         verified, updated_password_hash = security.password_hashing.verify_password(
             password,
@@ -68,13 +68,10 @@ class UserService:
         )
 
         if not verified:
-            return None
+            raise IncorrectCredentialsError()
 
-        # TODO: Send it back to the handler to catch it.
-        # How should I send it to the handler?
-        # Using errors or is there another way?
         if not user.is_active:
-            return None
+            raise InactiveUserError()
 
         if updated_password_hash:
             user_in = UserUpdate(
@@ -102,10 +99,10 @@ class UserService:
         *,
         user_in: UserRegister,
         background_tasks: BackgroundTasks,
-    ) -> UserPublic | None:
+    ) -> UserPublic:
         user_db = self.get_by_email(user_in.email)
         if user_db:
-            return None  # TODO: Raise error
+            raise DuplicateUserError()
 
         user = User.model_validate(
             user_in,
@@ -124,7 +121,7 @@ class UserService:
             self.mailer.send_html_email,
             self.mail_template_manager.welcome_email(
                 user=user,
-            )
+            ),
         )
 
         return UserPublic.model_validate(user)

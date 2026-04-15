@@ -1,6 +1,6 @@
 from typing import Annotated, Any
 
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status
+from fastapi import APIRouter, BackgroundTasks, Depends
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from models.jwt import Token
 from models.user import UserPublic, UserRegister
@@ -21,18 +21,10 @@ def login(
     user_repository: Annotated[UserService, Depends(get_user_service)],
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
 ) -> Token:
-    token = user_repository.authenticate(
+    return user_repository.authenticate(
         email=form_data.username,
         password=form_data.password,
     )
-
-    if not token:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Incorrect email or password",
-        )
-
-    return token
 
 
 @router.post(
@@ -62,14 +54,7 @@ def register(
     """
     Register.
     """
-    user = user_repository.register(
+    return user_repository.register(
         user_in=user_in,
         background_tasks=background_tasks,
     )
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="The user with this email already exists in the system.",
-        )
-
-    return user
