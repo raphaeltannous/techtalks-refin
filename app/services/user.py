@@ -1,3 +1,4 @@
+import logging
 import uuid
 from datetime import timedelta
 
@@ -24,6 +25,7 @@ class UserService:
         self.user_repository = user_repository
         self.mail_template_manager = mail_template_manager
         self.mailer = mailer
+        self.logger = logging.getLogger("uvicorn.error")
 
     def get_public_users(self, offset: int, limit: int) -> UsersPublic:
         users, count = self.user_repository.get_users(offset, limit)
