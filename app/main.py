@@ -1,3 +1,5 @@
+import logging
+import pathlib
 from contextlib import asynccontextmanager
 
 from config import settings
@@ -31,6 +33,28 @@ async def lifespan(app: FastAPI):
 
     db_data.init(app.state.user_service)
 
+    # Logging
+    logger = logging.getLogger("uvicorn.error")
+
+    configPath: pathlib.Path = pathlib.Path(__file__)
+    rootProject: pathlib.Path = pathlib.Path(configPath.parent).parent
+    log_directory = rootProject.joinpath("logs")
+    if not log_directory.is_dir():
+        log_directory.mkdir()
+    log_file = log_directory.joinpath("app.log")
+
+    file_handler = logging.FileHandler(
+        str(log_file),
+        mode="a",
+    )
+    file_handler.setFormatter(
+        logging.Formatter(
+            "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        ),
+    )
+
+    logger.addHandler(file_handler)
+
     yield
 
     postgres_engine.dispose()
@@ -47,4 +71,7 @@ app.include_router(api_router)
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("main:app", reload=True)
+    uvicorn.run(
+        "main:app",
+        reload=True,
+    )
