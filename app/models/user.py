@@ -7,6 +7,7 @@ from sqlalchemy import DateTime
 from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
+    from password_reset import PasswordReset
     from user_profile import UserProfile
 
 
@@ -38,6 +39,9 @@ class User(UserBase, table=True):
     )
 
     user_profile: "UserProfile" = Relationship(
+        back_populates="user",
+    )
+    password_reset: "PasswordReset" = Relationship(
         back_populates="user",
     )
 
