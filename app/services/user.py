@@ -12,6 +12,7 @@ from mail.template_manager import EmailTemplateManager
 from models.jwt import Token
 from models.user import User, UserPublic, UserRegister, UsersPublic, UserUpdate
 from pydantic import EmailStr
+from repositories.password_reset import PasswordResetRepository
 from repositories.user import UserRepository
 
 
@@ -19,12 +20,16 @@ class UserService:
     def __init__(
         self,
         user_repository: UserRepository,
+        password_reset_repository: PasswordResetRepository,
         mail_template_manager: EmailTemplateManager,
         mailer: Mailer,
     ) -> None:
         self.user_repository = user_repository
+        self.password_reset_repository = password_reset_repository
+
         self.mail_template_manager = mail_template_manager
         self.mailer = mailer
+
         self.logger = logging.getLogger("uvicorn.error")
 
     def get_public_users(self, offset: int, limit: int) -> UsersPublic:
