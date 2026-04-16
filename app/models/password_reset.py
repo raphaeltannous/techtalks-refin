@@ -2,6 +2,7 @@ import uuid
 from datetime import datetime, timezone
 from typing import TYPE_CHECKING
 
+from pydantic import EmailStr
 from pydantic.alias_generators import to_snake
 from sqlalchemy import DateTime
 from sqlalchemy.orm import declared_attr
@@ -46,10 +47,6 @@ class PasswordReset(PasswordResetBase, table=True):
     created_at: datetime | None = Field(
         default_factory=lambda: datetime.now(timezone.utc),
         sa_type=DateTime(timezone=True),  # type: ignore
-    )
-
-    user: "User" = Relationship(
-        back_populates="password_reset",
     )
 
 

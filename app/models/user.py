@@ -41,9 +41,6 @@ class User(UserBase, table=True):
     user_profile: "UserProfile" = Relationship(
         back_populates="user",
     )
-    password_reset: "PasswordReset" = Relationship(
-        back_populates="user",
-    )
 
 
 class UserCreate(UserBase):
