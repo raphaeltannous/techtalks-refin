@@ -3,6 +3,8 @@ from typing import Annotated, Any
 from fastapi import APIRouter, BackgroundTasks, Depends
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from models.jwt import Token
+from models.message import Message
+from models.password_reset import PasswordResetRequest
 from models.user import UserPublic, UserRegister
 from services.user import UserService
 
@@ -57,4 +59,27 @@ def register(
     return user_repository.register(
         user_in=user_in,
         background_tasks=background_tasks,
+    )
+
+
+@router.post(
+    "/password-reset",
+    response_model=Message,
+)
+def password_reset_request(
+    *,
+    user_service: Annotated[UserService, Depends(get_user_service)],
+    password_reset_in: PasswordResetRequest,
+    background_tasks: BackgroundTasks,
+) -> Any:
+    """
+    Password reset request.
+    """
+    user_service.password_reset_request(
+        password_reset_request=password_reset_in,
+        background_tasks=background_tasks,
+    )
+
+    return Message(
+        message="Email sent.",
     )
