@@ -51,3 +51,15 @@ class PasswordReset(PasswordResetBase, table=True):
     user: "User" = Relationship(
         back_populates="password_reset",
     )
+
+
+class PasswordResetUpdate(SQLModel):
+    hash: str | None = Field(
+        default=None,
+        nullable=True,
+    )
+
+    expires_at: datetime | None = Field(
+        default=None,
+        nullable=True,
+    )
