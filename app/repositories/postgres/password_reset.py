@@ -12,7 +12,10 @@ class PostgresPasswordReset(PasswordResetRepository):
     ) -> None:
         self.engine = engine
 
-    def get_by_user_id(self, user_id: uuid.UUID) -> PasswordReset | None:
+    def get_by_user_id(
+        self,
+        user_id: uuid.UUID,
+    ) -> PasswordReset | None:
         with Session(self.engine) as session:
             statement = select(PasswordReset).where(
                 PasswordReset.user_id == user_id,
@@ -22,10 +25,13 @@ class PostgresPasswordReset(PasswordResetRepository):
 
             return password_reset
 
-    def get_by_hash(self, hash: str) -> PasswordReset | None:
+    def get_by_token_hash(
+        self,
+        token_hash: str,
+    ) -> PasswordReset | None:
         with Session(self.engine) as session:
             statement = select(PasswordReset).where(
-                PasswordReset.hash == hash,
+                PasswordReset.token_hash == token_hash,
             )
 
             password_reset = session.exec(statement).first()

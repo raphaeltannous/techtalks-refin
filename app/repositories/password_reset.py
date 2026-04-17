@@ -12,7 +12,7 @@ class PasswordResetRepository:
         pass
 
     @abstractmethod
-    def get_by_hash(self, hash: str) -> PasswordReset | None:
+    def get_by_token_hash(self, token_hash: str) -> PasswordReset | None:
         pass
 
     @abstractmethod

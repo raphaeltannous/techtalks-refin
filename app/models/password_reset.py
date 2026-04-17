@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 
 class PasswordResetBase(SQLModel):
-    hash: str = Field(
+    token_hash: str = Field(
         index=True,
         unique=True,
         nullable=False,
@@ -51,7 +51,7 @@ class PasswordReset(PasswordResetBase, table=True):
 
 
 class PasswordResetUpdate(SQLModel):
-    hash: str | None = Field(
+    token_hash: str | None = Field(
         default=None,
         nullable=True,
     )
