@@ -1,15 +1,17 @@
-from abc import ABC, abstractmethod
-from uuid import UUID
+import uuid
+from abc import ABCMeta, abstractmethod
+from models.email_verification import EmailVerification, EmailVerificationUpdate
 
-from app.models.email_verification import EmailVerification, EmailVerificationUpdate
-
-
-class AbstractEmailVerificationRepository(ABC):
+class EmailVerificationRepository:
+    __metaclass__ = ABCMeta
 
     @abstractmethod
     def get_by_token_hash(self, token_hash: str) -> EmailVerification | None:
-        """Fetch verification record using hashed token."""
-        ...
+        pass
+
+    @abstractmethod
+    def add(self, email_verification_in: EmailVerification) -> EmailVerification:
+        pass
 
     @abstractmethod
     def update(
@@ -17,5 +19,4 @@ class AbstractEmailVerificationRepository(ABC):
         db_obj: EmailVerification,
         obj_in: EmailVerificationUpdate,
     ) -> EmailVerification:
-        """Update email verification record."""
-        ...
+        pass
