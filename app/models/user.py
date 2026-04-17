@@ -8,7 +8,6 @@ from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
     from user_profile import UserProfile
-    from email_verification import EmailVerification
 
 
 class UserBase(SQLModel):
