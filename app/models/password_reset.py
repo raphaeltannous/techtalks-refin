@@ -1,6 +1,5 @@
 import uuid
 from datetime import datetime, timezone
-from typing import TYPE_CHECKING
 
 from pydantic import EmailStr
 from pydantic.alias_generators import to_snake
