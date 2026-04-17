@@ -10,7 +10,7 @@ class PostgresEmailVerificationRepository(EmailVerificationRepository):
     ) -> None:
         self.engine = engine
 
-    def get_by_hash(
+    def get_by_token_hash(
         self,
         token_hash: str,
     ) -> EmailVerification | None:
