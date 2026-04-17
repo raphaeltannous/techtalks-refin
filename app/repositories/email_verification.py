@@ -7,7 +7,7 @@ class EmailVerificationRepository:
     __metaclass__ = ABCMeta
 
     @abstractmethod
-    def get_by_token_hash(self, token_hash: str) -> EmailVerification | None:
+    def get_by_hash(self, token_hash: str) -> EmailVerification | None:
         pass
 
     @abstractmethod
