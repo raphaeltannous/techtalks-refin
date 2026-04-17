@@ -6,10 +6,7 @@ from pydantic import EmailStr
 from pydantic.alias_generators import to_snake
 from sqlalchemy import DateTime
 from sqlalchemy.orm import declared_attr
-from sqlmodel import Field, Relationship, SQLModel
-
-if TYPE_CHECKING:
-    from user import User
+from sqlmodel import Field, SQLModel
 
 
 class PasswordResetBase(SQLModel):
