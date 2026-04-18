@@ -76,6 +76,7 @@ class Settings(BaseSettings):
 
     FIRST_ADMIN_EMAIL: EmailStr = "test@example.com"
     FIRST_ADMIN_PASSWORD: str
+    FIRST_ADMIN_NAME: str
 
     # SMTP Configuration for email sending
     SMTP_SERVER: str = "localhost"
