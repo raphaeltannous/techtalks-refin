@@ -1,11 +1,12 @@
 import uuid
 from datetime import datetime, timezone
 
-from pydantic import EmailStr
+from pydantic import EmailStr, model_validator
 from pydantic.alias_generators import to_snake
 from sqlalchemy import DateTime
 from sqlalchemy.orm import declared_attr
 from sqlmodel import Field, SQLModel
+from typing_extensions import Self
 
 
 class PasswordResetBase(SQLModel):
@@ -60,3 +61,24 @@ class PasswordResetUpdate(SQLModel):
 
 class PasswordResetRequest(SQLModel):
     email: EmailStr
+
+
+class PasswordResetRequestUpdate(SQLModel):
+    token: str = Field(
+        nullable=False,
+    )
+
+    password: str = Field(
+        min_length=8,
+        max_length=125,
+    )
+    password_confirm: str = Field(
+        min_length=8,
+        max_length=125,
+    )
+
+    @model_validator(mode="after")
+    def check_passwords_match(self) -> Self:
+        if self.password != self.password_confirm:
+            raise ValueError("Passwords do not match")
+        return self
