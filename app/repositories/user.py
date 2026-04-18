@@ -26,5 +26,5 @@ class UserRepository:
         pass
 
     @abstractmethod
-    def update_user(self, user_db: User, user_in: UserUpdate) -> User | None:
+    def update_user(self, user_db: User, user_in: UserUpdate) -> User:
         pass

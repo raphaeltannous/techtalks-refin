@@ -55,7 +55,7 @@ class PostgresUserRepository(UserRepository):
 
             return user_in
 
-    def update_user(self, user_db: User, user_in: UserUpdate) -> User | None:
+    def update_user(self, user_db: User, user_in: UserUpdate) -> User:
         with Session(self.engine) as session:
             update_data = user_in.model_dump(
                 exclude_unset=True,

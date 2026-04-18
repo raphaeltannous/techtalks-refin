@@ -25,6 +25,7 @@ class User(UserBase, table=True):
     )
 
     hashed_password: str
+
     created_at: datetime | None = Field(
         default_factory=lambda: datetime.now(timezone.utc),
         sa_type=DateTime(timezone=True),  # type: ignore
