@@ -1,14 +1,10 @@
 import uuid
 from datetime import datetime, timezone
-from typing import TYPE_CHECKING
 
 from pydantic.alias_generators import to_snake
 from sqlalchemy import DateTime
 from sqlalchemy.orm import declared_attr
-from sqlmodel import Field, Relationship, SQLModel
-
-if TYPE_CHECKING:
-    from user_profile import UserProfile
+from sqlmodel import Field, SQLModel
 
 
 class UserProjectBase(SQLModel):
@@ -62,8 +58,4 @@ class UserProject(UserProjectBase, table=True):
         sa_column_kwargs={
             "onupdate": lambda: datetime.now(timezone.utc),
         },
-    )
-
-    user_profile: "UserProfile" = Relationship(
-        back_populates="user_projects",
     )

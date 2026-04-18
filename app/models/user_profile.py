@@ -1,21 +1,10 @@
 import uuid
 from datetime import datetime, timezone
-from typing import TYPE_CHECKING
 
 from pydantic.alias_generators import to_snake
 from sqlalchemy import DateTime
 from sqlalchemy.orm import declared_attr
-from sqlmodel import Field, Relationship, SQLModel
-
-if TYPE_CHECKING:
-    from user import User
-    from user_certificate import UserCertificate
-    from user_experience import UserExperience
-    from user_language import UserLanguage
-    from user_link import UserLink
-    from user_project import UserProject
-    from user_skill import UserSkill
-    from user_education import UserEducation
+from sqlmodel import Field, SQLModel
 
 
 class UserProfileBase(SQLModel):
@@ -56,29 +45,4 @@ class UserProfile(UserProfileBase, table=True):
         sa_column_kwargs={
             "onupdate": lambda: datetime.now(timezone.utc),
         },
-    )
-
-    user: "User" = Relationship(
-        back_populates="user_profile",
-    )
-    user_links: list["UserLink"] = Relationship(
-        back_populates="user_profile",
-    )
-    user_projects: list["UserProject"] = Relationship(
-        back_populates="user_profile",
-    )
-    user_certifications: list["UserCertificate"] = Relationship(
-        back_populates="user_profile",
-    )
-    user_languages: list["UserLanguage"] = Relationship(
-        back_populates="user_profile",
-    )
-    user_experiences: list["UserExperience"] = Relationship(
-        back_populates="user_profile",
-    )
-    user_skills: list["UserSkill"] = Relationship(
-        back_populates="user_profile",
-    )
-    user_educations: list["UserEducation"] = Relationship(
-        back_populates="user_profile",
     )
