@@ -7,3 +7,4 @@ tenacity
 pyjwt
 psycopg2
 jinja2
+blake3

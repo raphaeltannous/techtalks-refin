@@ -73,3 +73,14 @@ class EmailTemplateManager:
             reset_link=reset_link,
             expiration_minutes=expiration_minutes,
         )
+
+    def password_updated(
+        self,
+        user: User,
+    ) -> EmailData:
+        return self.__render_template(
+            template_name="password_updated.html",
+            recipient=user.email,
+            subject="Your password is updated",
+            name=user.name,
+        )

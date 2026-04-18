@@ -3,7 +3,7 @@ from repositories.email_verification import EmailVerificationRepository
 from sqlmodel import Session, select
 
 
-class PostgresEmailVerification(EmailVerificationRepository):
+class PostgresEmailVerificationRepository(EmailVerificationRepository):
     def __init__(
         self,
         engine,
