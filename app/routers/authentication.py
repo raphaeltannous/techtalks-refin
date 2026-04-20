@@ -5,6 +5,7 @@ from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from models.jwt import Token
 from models.message import Message
 from models.password_reset import PasswordResetRequest, PasswordResetRequestUpdate
+from models.email_verification import EmailVerificationConfirm
 from models.user import UserPublic, UserRegister
 from services.user import UserService
 
@@ -102,4 +103,38 @@ def password_reset(
 
     return Message(
         message="Password updated.",
+    )
+
+@router.post(
+    "/email-verification",
+    response_model=Message,
+)
+def email_verification_request(
+    *,
+    user_service: Annotated[UserService, Depends(get_user_service)],
+    current_user: CurrentUser,
+) -> Any:
+    user_service.email_verification_request(
+        current_user=current_user,
+    )
+    
+    return Message(
+        message="Email sent. "
+    )
+
+@router.put(
+    "/email-verification",
+    response_model=Message, 
+)
+def email_verification_confirm(
+    *,
+    user_service: Annotated[UserService, Depends(get_user_service)],
+    obj_in: EmailVerificationConfirm,
+) -> Any:
+    """ Confirm email by using the token from the verfication email."""
+    user_service.email_verification_confirm(
+        token=obj_in.token,
+    )
+    return Message(
+        message="Email verified.",
     )
