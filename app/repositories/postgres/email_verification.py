@@ -1,3 +1,5 @@
+import uuid
+
 from models.email_verification import EmailVerification, EmailVerificationUpdate
 from repositories.email_verification import EmailVerificationRepository
 from sqlmodel import Session, select
@@ -10,6 +12,16 @@ class PostgresEmailVerificationRepository(EmailVerificationRepository):
     ) -> None:
         self.engine = engine
 
+    def get_by_user_id(self, user_id : uuid.UUID,
+    ) -> EmailVerification | None:
+        with Session(self.engine) as session:
+            statement = select(EmailVerification).where(
+                EmailVerification.user_id == user_id,
+            )
+            email_verification = session.exec(statement).first()
+
+            return  email_verification
+    
     def get_by_token_hash(
         self,
         token_hash: str,
