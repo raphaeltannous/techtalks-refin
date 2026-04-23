@@ -40,15 +40,14 @@ def get_current_user(
             detail="Could not validate credentials",
         )
 
-    try:
-        user_id = uuid.UUID(token_data.sub)
-    except (TypeError, ValueError):
+    username = token_data.sub
+    if not username:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Could not validate credentials.",
+            detail="Could not validate credentials",
         )
 
-    user = user_service.get_by_id(user_id)
+    user = user_service.get_by_username(username)
 
     if not user:
         raise HTTPException(

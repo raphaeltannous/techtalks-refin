@@ -117,7 +117,7 @@ class UserService:
 
         return Token(
             access_token=security.jwt_token.create_access_token(
-                user.id,
+                user.username,
                 expires_delta=access_token_expires,
             )
         )
