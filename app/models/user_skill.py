@@ -40,3 +40,17 @@ class UserSkill(UserSkillBase, table=True):
             "onupdate": lambda: datetime.now(timezone.utc),
         },
     )
+
+
+class UserSkillUpdate(UserSkillBase):
+    pass
+
+
+class UserSkillPublic(UserSkillBase):
+    id: uuid.UUID
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+
+
+class UserSkillsPublic(SQLModel):
+    skills: list[UserSkillPublic]
