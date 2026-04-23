@@ -12,8 +12,11 @@ from mail.template_manager import EmailTemplateManager
 from repositories.postgres.email_verification import PostgresEmailVerificationRepository
 from repositories.postgres.password_reset import PostgresPasswordResetRepository
 from repositories.postgres.user import PostgresUserRepository
+from repositories.postgres.user_profile import PostgresUserProfileRepository
+from repositories.postgres.user_skill import PostgresUserSkillRepository
 from routers.main import api_router
 from services.user import UserService
+from services.user_profile import UserProfileService
 
 
 @asynccontextmanager
@@ -28,6 +31,9 @@ async def lifespan(app: FastAPI):
     password_reset_repository = PostgresPasswordResetRepository(postgres_engine)
     email_verification_repository = PostgresEmailVerificationRepository(postgres_engine)
 
+    user_profile_repository = PostgresUserProfileRepository(postgres_engine)
+    user_skill_repository = PostgresUserSkillRepository(postgres_engine)
+
     # Initialize Services
     app.state.user_service = UserService(
         user_repository=user_repository,
@@ -35,6 +41,12 @@ async def lifespan(app: FastAPI):
         email_verification_repository=email_verification_repository,
         mail_template_manager=mail_template_manager,
         mailer=mailer,
+    )
+
+    app.state.user_profile_service = UserProfileService(
+        user_repository=user_repository,
+        user_skill_repository=user_skill_repository,
+        user_profile_repository=user_profile_repository,
     )
 
     db_data.init(app.state.user_service)
