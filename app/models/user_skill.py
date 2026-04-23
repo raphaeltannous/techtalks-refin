@@ -8,6 +8,7 @@ from sqlmodel import Field, SQLModel
 
 
 class UserSkillBase(SQLModel):
+    # TODO: add min_length=2
     skill: str = Field(max_length=50)
 
 
@@ -40,6 +41,10 @@ class UserSkill(UserSkillBase, table=True):
             "onupdate": lambda: datetime.now(timezone.utc),
         },
     )
+
+
+class UserSkillIn(UserSkillBase):
+    pass
 
 
 class UserSkillUpdate(UserSkillBase):
