@@ -5,7 +5,7 @@ class DuplicateUserError(HTTPException):
     def __init__(self):
         super().__init__(
             status_code=status.HTTP_409_CONFLICT,
-            detail="User with this email already exists",
+            detail="User with this email or username already exists",
         )
 
 

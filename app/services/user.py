@@ -132,6 +132,10 @@ class UserService:
         if user_db:
             raise DuplicateUserError()
 
+        user_db = self.get_by_username(user_in.username)
+        if user_db:
+            raise DuplicateUserError()
+
         user = User.model_validate(
             user_in,
             update={
