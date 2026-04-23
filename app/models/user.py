@@ -11,6 +11,7 @@ class UserBase(SQLModel):
     name: str | None = Field(default=None, index=True, max_length=75)
     is_active: bool = True
     is_admin: bool = False
+    is_verified: bool = Field(default=False)
 
 
 class User(UserBase, table=True):

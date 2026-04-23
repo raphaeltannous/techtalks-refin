@@ -54,6 +54,17 @@ class Settings(BaseSettings):
 
     PASSWORD_RESET_TOKEN_EXPIRE_MINUTES: int = 10
 
+    FRONTEND_EMAIL_VERIFICATION_PATH: str = "/email-verification"
+
+    @computed_field
+    @property
+    def FRONTEND_EMAIL_VERIFICATION_URL(self) -> str:
+        return urljoin(
+            self.FRONTEND_URL.rstrip("/") + "/", self.FRONTEND_EMAIL_VERIFICATION_PATH
+        )
+
+    EMAIL_VERIFICATION_TOKEN_EXPIRE_MINUTES: int = 10
+
     PROJECT_NAME: str
 
     POSTGRES_SERVER: str

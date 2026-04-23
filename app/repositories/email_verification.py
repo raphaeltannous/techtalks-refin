@@ -1,3 +1,4 @@
+import uuid
 from abc import ABCMeta, abstractmethod
 
 from models.email_verification import EmailVerification, EmailVerificationUpdate
@@ -5,6 +6,10 @@ from models.email_verification import EmailVerification, EmailVerificationUpdate
 
 class EmailVerificationRepository:
     __metaclass__ = ABCMeta
+
+    @abstractmethod
+    def get_by_user_id(self, user_id: uuid.UUID) -> EmailVerification | None:
+        pass
 
     @abstractmethod
     def get_by_token_hash(self, token_hash: str) -> EmailVerification | None:

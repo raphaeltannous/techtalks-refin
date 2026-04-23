@@ -2,6 +2,7 @@ from typing import Annotated, Any
 
 from fastapi import APIRouter, BackgroundTasks, Depends
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
+from models.email_verification import EmailVerificationConfirm
 from models.jwt import Token
 from models.message import Message
 from models.password_reset import PasswordResetRequest, PasswordResetRequestUpdate
@@ -102,4 +103,43 @@ def password_reset(
 
     return Message(
         message="Password updated.",
+    )
+
+
+@router.post(
+    "/email-verification",
+    response_model=Message,
+)
+def email_verification_request(
+    *,
+    user_service: Annotated[UserService, Depends(get_user_service)],
+    current_user: CurrentUser,
+    background_tasks: BackgroundTasks,
+) -> Any:
+    user_service.email_verification_request(
+        current_user=current_user,
+        background_tasks=background_tasks,
+    )
+
+    return Message(
+        message="If your email is unverified, a message has been sent.",
+    )
+
+
+@router.put(
+    "/email-verification",
+    response_model=Message,
+)
+def email_verification_confirm(
+    *,
+    user_service: Annotated[UserService, Depends(get_user_service)],
+    obj_in: EmailVerificationConfirm,
+) -> Any:
+    """Confirm email by using the token from the verification email."""
+    user_service.email_verification_confirm(
+        token=obj_in.token,
+    )
+
+    return Message(
+        message="Email verified.",
     )

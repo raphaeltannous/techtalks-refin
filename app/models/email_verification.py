@@ -55,3 +55,7 @@ class EmailVerificationUpdate(SQLModel):
         default=None,
         nullable=True,
     )
+
+
+class EmailVerificationConfirm(SQLModel):
+    token: str = Field(nullable=False)
