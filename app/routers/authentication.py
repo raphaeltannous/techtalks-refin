@@ -105,6 +105,7 @@ def password_reset(
         message="Password updated.",
     )
 
+
 @router.post(
     "/email-verification",
     response_model=Message,
@@ -113,25 +114,26 @@ def email_verification_request(
     *,
     user_service: Annotated[UserService, Depends(get_user_service)],
     current_user: CurrentUser,
+    background_tasks: BackgroundTasks,
 ) -> Any:
     user_service.email_verification_request(
         current_user=current_user,
+        background_tasks=background_tasks,
     )
-    
-    return Message(
-        message="Email sent. "
-    )
+
+    return Message(message="If your email is unverified, a message has been sent.")
+
 
 @router.put(
     "/email-verification",
-    response_model=Message, 
+    response_model=Message,
 )
 def email_verification_confirm(
     *,
     user_service: Annotated[UserService, Depends(get_user_service)],
     obj_in: EmailVerificationConfirm,
 ) -> Any:
-    """ Confirm email by using the token from the verfication email."""
+    """Confirm email by using the token from the verification email."""
     user_service.email_verification_confirm(
         token=obj_in.token,
     )
