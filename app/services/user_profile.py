@@ -120,10 +120,14 @@ class UserProfileService:
     def update_user_skill(
         self,
         *,
+        user_profile: UserProfile,
         skill_id: uuid.UUID,
         skill_in: UserSkillUpdate,
     ) -> UserSkillPublic:
         skill = self.__get_user_skill_by_id(skill_id=skill_id)
+
+        if skill.user_profile_id != user_profile.id:
+            raise ForbiddenAction()
 
         skill = self.user_skill_repository.update(
             skill_db=skill,

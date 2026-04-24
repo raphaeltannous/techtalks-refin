@@ -19,7 +19,7 @@ router = APIRouter(
 
 
 @router.get(
-    "/{username}",
+    "/by-username/{username}",
     response_model=UserSkillsPublic,
 )
 def get_user_skills(
@@ -80,10 +80,12 @@ def update_skill(
     user_profile_service: Annotated[
         UserProfileService, Depends(get_user_profile_service)
     ],
+    user_profile: Annotated[UserProfile, Depends(get_current_user_profile)],
     skill_id: uuid.UUID,
     skill_in: UserSkillUpdate,
 ) -> Any:
     return user_profile_service.update_user_skill(
+        user_profile=user_profile,
         skill_id=skill_id,
         skill_in=skill_in,
     )
