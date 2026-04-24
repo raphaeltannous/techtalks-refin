@@ -66,6 +66,17 @@ class UserProfileService:
             skills=public_skills,
         )
 
+    def get_skill_by_id(
+        self,
+        *,
+        skill_id: uuid.UUID,
+    ) -> UserSkillPublic:
+        skill = self.__get_skill_by_id(skill_id=skill_id)
+
+        return UserSkillPublic.model_validate(
+            skill,
+        )
+
     def add_skill(
         self,
         *,
@@ -82,21 +93,6 @@ class UserProfileService:
         skill = self.user_skill_repository.add(
             skill,
         )
-
-        return UserSkillPublic.model_validate(
-            skill,
-        )
-
-    def get_skill_by_id(
-        self,
-        *,
-        skill_id: uuid.UUID,
-    ) -> UserSkillPublic:
-        skill = self.user_skill_repository.get_by_id(
-            skill_id=skill_id,
-        )
-        if not skill:
-            raise UserSkillNotFoundError()
 
         return UserSkillPublic.model_validate(
             skill,
