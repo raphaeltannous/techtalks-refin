@@ -13,6 +13,8 @@ from pydantic import ValidationError
 from services.user import UserService
 from services.user_profile import UserProfileService
 
+from app.exceptions import UserProfileNotFoundError
+
 reusable_oauth2 = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 
@@ -80,10 +82,7 @@ def get_current_user_profile(
     )
 
     if not user_profile:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="User profile does not exists.",
-        )
+        raise UserProfileNotFoundError()
 
     return user_profile
 
