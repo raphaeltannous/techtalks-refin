@@ -66,7 +66,7 @@ class UserProfileService:
             skills=public_skills,
         )
 
-    def add_user_skill(
+    def add_skill(
         self,
         *,
         user_profile: UserProfile,
@@ -87,7 +87,7 @@ class UserProfileService:
             skill,
         )
 
-    def get_user_skill_by_id(
+    def get_skill_by_id(
         self,
         *,
         skill_id: uuid.UUID,
@@ -102,13 +102,13 @@ class UserProfileService:
             skill,
         )
 
-    def delete_user_skill(
+    def delete_skill(
         self,
         *,
         user_profile: UserProfile,
         skill_id: uuid.UUID,
     ) -> None:
-        skill = self.__get_user_skill_by_id(skill_id=skill_id)
+        skill = self.__get_skill_by_id(skill_id=skill_id)
 
         if skill.user_profile_id != user_profile.id:
             raise ForbiddenAction()
@@ -117,14 +117,14 @@ class UserProfileService:
             skill_db=skill,
         )
 
-    def update_user_skill(
+    def update_skill(
         self,
         *,
         user_profile: UserProfile,
         skill_id: uuid.UUID,
         skill_in: UserSkillUpdate,
     ) -> UserSkillPublic:
-        skill = self.__get_user_skill_by_id(skill_id=skill_id)
+        skill = self.__get_skill_by_id(skill_id=skill_id)
 
         if skill.user_profile_id != user_profile.id:
             raise ForbiddenAction()
@@ -165,7 +165,7 @@ class UserProfileService:
 
         return profile
 
-    def __get_user_skill_by_id(
+    def __get_skill_by_id(
         self,
         *,
         skill_id: uuid.UUID,

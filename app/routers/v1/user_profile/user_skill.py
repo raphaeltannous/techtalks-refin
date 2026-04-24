@@ -49,7 +49,7 @@ def add_skill(
     """
     Add new user skill.
     """
-    return user_profile_service.add_user_skill(
+    return user_profile_service.add_skill(
         user_profile=user_profile,
         skill_in=skill_in,
     )
@@ -66,7 +66,7 @@ def get_skill_by_id(
     ],
     skill_id: uuid.UUID,
 ) -> Any:
-    return user_profile_service.get_user_skill_by_id(
+    return user_profile_service.get_skill_by_id(
         skill_id=skill_id,
     )
 
@@ -84,7 +84,7 @@ def update_skill(
     skill_id: uuid.UUID,
     skill_in: UserSkillUpdate,
 ) -> Any:
-    return user_profile_service.update_user_skill(
+    return user_profile_service.update_skill(
         user_profile=user_profile,
         skill_id=skill_id,
         skill_in=skill_in,
@@ -103,7 +103,7 @@ def delete_skill(
     user_profile: Annotated[UserProfile, Depends(get_current_user_profile)],
     skill_id: uuid.UUID,
 ) -> Any:
-    user_profile_service.delete_user_skill(
+    user_profile_service.delete_skill(
         user_profile=user_profile,
         skill_id=skill_id,
     )
