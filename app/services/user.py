@@ -14,6 +14,7 @@ from exceptions import (
     IncorrectCredentialsError,
     InvalidEmailVerificationToken,
     InvalidPasswordResetToken,
+    UserNotFoundError,
 )
 from fastapi import BackgroundTasks
 from mail.mailer import Mailer
@@ -66,9 +67,6 @@ class UserService:
 
     def get_by_id(self, id: uuid.UUID) -> User | None:
         return self.user_repository.get_by_id(id)
-
-    def get_by_username(self, username: str) -> User | None:
-        return self.user_repository.get_by_username(username)
 
     def get_by_email(self, email: EmailStr) -> User | None:
         return self.user_repository.get_by_email(email)
@@ -132,7 +130,7 @@ class UserService:
         if user_db:
             raise DuplicateUserError()
 
-        user_db = self.get_by_username(user_in.username)
+        user_db = self.__get_by_username(user_in.username)
         if user_db:
             raise DuplicateUserError()
 
@@ -367,3 +365,10 @@ class UserService:
                 expires_at=datetime.now(timezone.utc),
             ),
         )
+
+    def __get_by_username(self, username: str) -> User:
+        user = self.user_repository.get_by_username(username)
+        if not user:
+            raise UserNotFoundError()
+
+        return user

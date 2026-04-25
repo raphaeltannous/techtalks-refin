@@ -46,6 +46,7 @@ class User(UserBase, table=True):
 
 
 class UserCreate(UserBase):
+    email: EmailStr = Field(max_length=255)
     password: str = Field(min_length=8, max_length=128)
 
 
@@ -63,7 +64,7 @@ class UserUpdate(UserBase):
     Making username and email optional from UserBase.
     """
 
-    username: str | None = Field(default=None, min_length=4, max_length=255)  # type: ignore[assignment]
+    username: str | None = Field(default=None, min_length=4, max_length=75)  # type: ignore[assignment]
     email: EmailStr | None = Field(default=None, max_length=255)
     hashed_password: str | None = Field(default=None)
 
