@@ -54,6 +54,24 @@ class UserProfileService:
             user_id=user_id,
         )
 
+    def get_by_username(
+        self,
+        *,
+        username: str,
+    ) -> UserProfilePublic | None:
+        user = self.__get_user_by_username(username=username)
+
+        if not user:
+            raise UserNotFoundError()
+
+        profile = self.get_by_user_id(
+            user_id=user.id,
+        )
+
+        return UserProfilePublic.model_validate(
+            profile,
+        )
+
     def update_profile(
         self,
         *,
