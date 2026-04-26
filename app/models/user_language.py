@@ -50,3 +50,21 @@ class UserLanguage(UserLanguageBase, table=True):
             "onupdate": lambda: datetime.now(timezone.utc),
         },
     )
+
+
+class UserLanguageIn(UserLanguageBase):
+    pass
+
+
+class UserLanguageUpdate(UserLanguageBase):
+    pass
+
+
+class UserLanguagePublic(UserLanguageBase):
+    id: uuid.UUID
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+
+
+class UserLanguagesPublic(SQLModel):
+    languages: list[UserLanguagePublic]
