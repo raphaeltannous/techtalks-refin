@@ -65,6 +65,14 @@ class UserLanguageNotFoundError(HTTPException):
         )
 
 
+class UserLinkNotFoundError(HTTPException):
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Link not found",
+        )
+
+
 class UserNotFoundError(HTTPException):
     def __init__(self):
         super().__init__(
