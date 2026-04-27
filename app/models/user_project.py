@@ -59,3 +59,21 @@ class UserProject(UserProjectBase, table=True):
             "onupdate": lambda: datetime.now(timezone.utc),
         },
     )
+
+
+class UserProjectIn(UserProjectBase):
+    pass
+
+
+class UserProjectUpdate(UserProjectBase):
+    pass
+
+
+class UserProjectPublic(UserProjectBase):
+    id: uuid.UUID
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+
+
+class UserProjectsPublic(SQLModel):
+    projects: list[UserProjectPublic]
