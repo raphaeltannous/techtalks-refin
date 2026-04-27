@@ -4,6 +4,7 @@ import uuid
 from exceptions import (
     ForbiddenAction,
     UserLanguageNotFoundError,
+    UserLinkNotFoundError,
     UserNotFoundError,
     UserProfileNotFoundError,
     UserSkillNotFoundError,
@@ -16,6 +17,13 @@ from models.user_language import (
     UserLanguagesPublic,
     UserLanguageUpdate,
 )
+from models.user_link import (
+    UserLink,
+    UserLinkIn,
+    UserLinkPublic,
+    UserLinksPublic,
+    UserLinkUpdate,
+)
 from models.user_profile import UserProfile
 from models.user_skill import (
     UserSkill,
@@ -26,6 +34,7 @@ from models.user_skill import (
 )
 from repositories.user import UserRepository
 from repositories.user_language import UserLanguageRepository
+from repositories.user_link import UserLinkRepository
 from repositories.user_profile import UserProfileRepository
 from repositories.user_skill import UserSkillRepository
 
@@ -37,11 +46,13 @@ class UserProfileService:
         user_skill_repository: UserSkillRepository,
         user_profile_repository: UserProfileRepository,
         user_language_repository: UserLanguageRepository,
+        user_link_repository: UserLinkRepository,
     ) -> None:
         self.user_repository = user_repository
         self.user_skill_repository = user_skill_repository
         self.user_profile_repository = user_profile_repository
         self.user_language_repository = user_language_repository
+        self.user_link_repository = user_link_repository
 
         self.logger = logging.getLogger("uvicorn.error")
 
@@ -236,6 +247,97 @@ class UserProfileService:
             language,
         )
 
+    def get_all_links_by_username(
+        self,
+        *,
+        username: str,
+    ) -> UserLinksPublic:
+        user = self.__get_user_by_username(
+            username=username,
+        )
+
+        user_profile = self.__get_user_profile_by_user_id(
+            user_id=user.id,
+        )
+
+        links = self.user_link_repository.get_all_by_user_profile_id(
+            user_profile.id,
+        )
+
+        public_links = [UserLinkPublic.model_validate(l) for l in links]
+
+        return UserLinksPublic(
+            links=public_links,
+        )
+
+    def get_link_by_id(
+        self,
+        *,
+        link_id: uuid.UUID,
+    ) -> UserLinkPublic:
+        link = self.__get_link_by_id(link_id=link_id)
+
+        return UserLinkPublic.model_validate(
+            link,
+        )
+
+    def add_link(
+        self,
+        *,
+        user_profile: UserProfile,
+        link_in: UserLinkIn,
+    ) -> UserLinkPublic:
+        link = UserLink.model_validate(
+            link_in,
+            update={
+                "user_profile_id": user_profile.id,
+            },
+        )
+
+        link = self.user_link_repository.add(
+            link,
+        )
+
+        return UserLinkPublic.model_validate(
+            link,
+        )
+
+    def delete_link(
+        self,
+        *,
+        user_profile: UserProfile,
+        link_id: uuid.UUID,
+    ) -> None:
+        link = self.__get_link_by_id(link_id=link_id)
+
+        if link.user_profile_id != user_profile.id:
+            raise ForbiddenAction()
+
+        self.user_link_repository.delete(
+            link_db=link,
+        )
+
+    def update_link(
+        self,
+        *,
+        user_profile: UserProfile,
+        link_id: uuid.UUID,
+        link_in: UserLinkUpdate,
+    ) -> UserLinkPublic:
+        link = self.__get_link_by_id(link_id=link_id)
+
+        if link.user_profile_id != user_profile.id:
+            raise ForbiddenAction()
+
+        link = self.user_link_repository.update(
+            link_db=link,
+            link_in=link_in,
+        )
+
+        return UserLinkPublic.model_validate(
+            link,
+        )
+
     # Private helper functions
     def __get_user_by_username(
         self,
@@ -288,3 +390,16 @@ class UserProfileService:
             raise UserLanguageNotFoundError()
 
         return language
+
+    def __get_link_by_id(
+        self,
+        *,
+        link_id: uuid.UUID,
+    ) -> UserLink:
+        link = self.user_link_repository.get_by_id(
+            link_id,
+        )
+        if not link:
+            raise UserLinkNotFoundError()
+
+        return link
