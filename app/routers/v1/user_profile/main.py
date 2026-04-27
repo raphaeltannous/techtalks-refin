@@ -15,13 +15,13 @@ main_user_profile_router.include_router(
 )
 main_user_profile_router.include_router(
     user_skill_router,
-    prefix="/user-skill",
+    prefix="/skill",
 )
 main_user_profile_router.include_router(
     user_language_router,
-    prefix="/user-language",
+    prefix="/language",
 )
 main_user_profile_router.include_router(
     user_link_router,
-    prefix="/user-link",
+    prefix="/link",
 )
