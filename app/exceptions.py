@@ -95,3 +95,11 @@ class UserProfileNotFoundError(HTTPException):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="User profile not found",
         )
+
+
+class UserExperienceNotFoundError(HTTPException):
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Link not found",
+        )
