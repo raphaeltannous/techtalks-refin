@@ -70,5 +70,3 @@ class PostgresUserExperienceRepository(UserExperienceRepository):
         with Session(self.engine) as session:
             session.delete(experience_db)
             session.commit()
-
-    

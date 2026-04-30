@@ -18,28 +18,28 @@ class UserExperienceRepository:
     @abstractmethod
     def get_by_id(
         self,
-       experience_id: uuid.UUID,
+        experience_id: uuid.UUID,
     ) -> UserExperience | None:
         pass
 
     @abstractmethod
     def add(
         self,
-       experience_in: UserExperience,
+        experience_in: UserExperience,
     ) -> UserExperience:
         pass
 
     @abstractmethod
     def update(
         self,
-       experience_db: UserExperience,
-       experience_in: UserExperienceUpdate,
+        experience_db: UserExperience,
+        experience_in: UserExperienceUpdate,
     ) -> UserExperience:
         pass
 
     @abstractmethod
     def delete(
         self,
-       experience_db: UserExperience,
+        experience_db: UserExperience,
     ) -> None:
         pass

@@ -48,9 +48,7 @@ class UserExperienceBase(SQLModel):
 class UserExperience(UserExperienceBase, table=True):
     @declared_attr.directive  # type: ignore[misc]
     @classmethod
-    def __tablename__(
-        cls,
-    ) -> str:  # pyright: ignore[reportIncompatibleVariableOverride]
+    def __tablename__(cls) -> str:  # pyright: ignore[reportIncompatibleVariableOverride]
         return to_snake(cls.__name__)
 
     id: uuid.UUID = Field(

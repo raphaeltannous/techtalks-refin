@@ -1,11 +1,11 @@
 from fastapi import APIRouter
 
+from .user_experience import router as user_experience_router
 from .user_language import router as user_language_router
 from .user_link import router as user_link_router
 from .user_profile import router as user_profile_router
 from .user_project import router as user_project_router
 from .user_skill import router as user_skill_router
-from .user_experience import router as user_experience_router
 
 main_user_profile_router = APIRouter(
     tags=["user-profile"],

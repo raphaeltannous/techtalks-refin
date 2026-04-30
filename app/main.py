@@ -12,12 +12,12 @@ from mail.template_manager import EmailTemplateManager
 from repositories.postgres.email_verification import PostgresEmailVerificationRepository
 from repositories.postgres.password_reset import PostgresPasswordResetRepository
 from repositories.postgres.user import PostgresUserRepository
+from repositories.postgres.user_experience import PostgresUserExperienceRepository
 from repositories.postgres.user_language import PostgresUserLanguageRepository
 from repositories.postgres.user_link import PostgresUserLinkRepository
 from repositories.postgres.user_profile import PostgresUserProfileRepository
 from repositories.postgres.user_project import PostgresUserProjectRepository
 from repositories.postgres.user_skill import PostgresUserSkillRepository
-from repositories.postgres.user_experience import PostgresUserExperienceRepository
 from routers.main import api_router
 from services.user import UserService
 from services.user_profile import UserProfileService
