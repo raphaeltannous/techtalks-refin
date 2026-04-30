@@ -3,6 +3,7 @@ import uuid
 
 from exceptions import (
     ForbiddenAction,
+    UserExperienceNotFoundError,
     UserLanguageNotFoundError,
     UserLinkNotFoundError,
     UserNotFoundError,
@@ -11,6 +12,13 @@ from exceptions import (
     UserSkillNotFoundError,
 )
 from models.user import User
+from models.user_experience import (
+    UserExperience,
+    UserExperienceIn,
+    UserExperiencePublic,
+    UserExperiencesPublic,
+    UserExperienceUpdate,
+)
 from models.user_language import (
     UserLanguage,
     UserLanguageIn,
@@ -41,6 +49,7 @@ from models.user_skill import (
     UserSkillUpdate,
 )
 from repositories.user import UserRepository
+from repositories.user_experience import UserExperienceRepository
 from repositories.user_language import UserLanguageRepository
 from repositories.user_link import UserLinkRepository
 from repositories.user_profile import UserProfileRepository
@@ -56,6 +65,7 @@ class UserProfileService:
         user_profile_repository: UserProfileRepository,
         user_language_repository: UserLanguageRepository,
         user_link_repository: UserLinkRepository,
+        user_experience_repository: UserExperienceRepository,
         user_project_repository: UserProjectRepository,
     ) -> None:
         self.user_repository = user_repository
@@ -63,6 +73,7 @@ class UserProfileService:
         self.user_profile_repository = user_profile_repository
         self.user_language_repository = user_language_repository
         self.user_link_repository = user_link_repository
+        self.user_experience_repository = user_experience_repository
         self.user_project_repository = user_project_repository
 
         self.logger = logging.getLogger("uvicorn.error")
@@ -470,6 +481,96 @@ class UserProfileService:
             project,
         )
 
+    def get_all_experiences_by_username(
+        self,
+        *,
+        username: str,
+    ) -> UserExperiencesPublic:
+        user = self.__get_user_by_username(
+            username=username,
+        )
+        user_profile = self.__get_user_profile_by_user_id(
+            user_id=user.id,
+        )
+        experiences = self.user_experience_repository.get_all_by_user_profile_id(
+            user_profile.id,
+        )
+        public_experiences = [
+            UserExperiencePublic.model_validate(l) for l in experiences
+        ]
+
+        return UserExperiencesPublic(
+            experiences=public_experiences,
+        )
+
+    def get_experience_by_id(
+        self,
+        *,
+        experience_id: uuid.UUID,
+    ) -> UserExperiencePublic:
+        experience = self.__get_experience_by_id(experience_id=experience_id)
+
+        return UserExperiencePublic.model_validate(
+            experience,
+        )
+
+    def add_experience(
+        self,
+        *,
+        user_profile: UserProfile,
+        experience_in: UserExperienceIn,
+    ) -> UserExperiencePublic:
+        experience = UserExperience.model_validate(
+            experience_in,
+            update={
+                "user_profile_id": user_profile.id,
+            },
+        )
+
+        experience = self.user_experience_repository.add(
+            experience,
+        )
+
+        return UserExperiencePublic.model_validate(
+            experience,
+        )
+
+    def delete_experience(
+        self,
+        *,
+        user_profile: UserProfile,
+        experience_id: uuid.UUID,
+    ) -> None:
+        experience = self.__get_experience_by_id(experience_id=experience_id)
+
+        if experience.user_profile_id != user_profile.id:
+            raise ForbiddenAction()
+
+        self.user_experience_repository.delete(
+            experience_db=experience,
+        )
+
+    def update_experience(
+        self,
+        *,
+        user_profile: UserProfile,
+        experience_id: uuid.UUID,
+        experience_in: UserExperienceUpdate,
+    ) -> UserExperiencePublic:
+        experience = self.__get_experience_by_id(experience_id=experience_id)
+
+        if experience.user_profile_id != user_profile.id:
+            raise ForbiddenAction()
+
+        experience = self.user_experience_repository.update(
+            experience_db=experience,
+            experience_in=experience_in,
+        )
+
+        return UserExperiencePublic.model_validate(
+            experience,
+        )
+
     # Private helper functions
     def __get_user_by_username(
         self,
@@ -561,3 +662,16 @@ class UserProfileService:
             raise UserProjectNotFoundError()
 
         return project
+
+    def __get_experience_by_id(
+        self,
+        *,
+        experience_id: uuid.UUID,
+    ) -> UserExperience:
+        experience = self.user_experience_repository.get_by_id(
+            experience_id,
+        )
+        if not experience:
+            raise UserExperienceNotFoundError()
+
+        return experience
