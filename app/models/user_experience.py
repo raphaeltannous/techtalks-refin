@@ -68,11 +68,9 @@ class UserExperience(UserExperienceBase, table=True):
     created_at: datetime | None = Field(
         default_factory=lambda: datetime.now(timezone.utc),
         sa_type=DateTime(timezone=True),  # type: ignore
-        sa_type=DateTime(timezone=True),  # type: ignore
     )
     updated_at: datetime | None = Field(
         default_factory=lambda: datetime.now(timezone.utc),
-        sa_type=DateTime(timezone=True),  # type: ignore
         sa_type=DateTime(timezone=True),  # type: ignore
         sa_column_kwargs={
             "onupdate": lambda: datetime.now(timezone.utc),
